@@ -14,6 +14,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ public class BigBangLayout extends ViewGroup {
     private int mItemSpace;
     private Item mTargetItem;
     private List<Line> mLines;
+    private int mActionBarTopHeight;
+    private int mActionBarBottomHeight;
+    private BigBangActionBar mActionBar;
 
     public BigBangLayout(Context context) {
         super(context);
@@ -52,16 +56,26 @@ public class BigBangLayout extends ViewGroup {
     }
 
     private void readAttribute(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BigBangLayout);
-        mItemSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_itemSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_item_space));
-        mLineSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_lineSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_line_space));
-        typedArray.recycle();
+        if (attrs != null) {
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BigBangLayout);
+            mItemSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_itemSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_item_space));
+            mLineSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_lineSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_line_space));
+            typedArray.recycle();
+            mActionBarBottomHeight = mLineSpace;
+            mActionBarTopHeight = getResources().getDimensionPixelSize(R.dimen.big_bang_action_bar_height);
+        }
+
+        // TODO 暂时放到这里
+        mActionBar = new BigBangActionBar(getContext());
+
+        addView(mActionBar, 0);
     }
 
     public void addTextItem(String text) {
         TextView view = new TextView(getContext());
         view.setText(text);
         view.setBackgroundResource(R.drawable.item_background);
+        view.setGravity(Gravity.CENTER);
         addView(view);
     }
 
@@ -69,6 +83,7 @@ public class BigBangLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         int widthSize = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
+        int contentWidthSize = widthSize - mActionBar.getContentPadding();
         int heightSize = 0;
 
         int childCount = getChildCount();
@@ -77,17 +92,22 @@ public class BigBangLayout extends ViewGroup {
 
         mLines = new ArrayList<>();
         Line currentLine = null;
-        int currentLineWidth = widthSize;
+        int currentLineWidth = contentWidthSize;
         for (int i = 0; i < childCount; i++) {
 
             View child = getChildAt(i);
+
+            if (mActionBar == child) {
+                continue;
+            }
+
             child.measure(measureSpec, measureSpec);
 
             if (currentLineWidth > 0) {
                 currentLineWidth += mItemSpace;
             }
             currentLineWidth += child.getMeasuredWidth();
-            if (mLines.size() == 0 || currentLineWidth > widthSize) {
+            if (mLines.size() == 0 || currentLineWidth > contentWidthSize) {
                 heightSize += child.getMeasuredHeight();
                 currentLineWidth = child.getMeasuredWidth();
                 currentLine = new Line(mLines.size());
@@ -101,11 +121,14 @@ public class BigBangLayout extends ViewGroup {
             currentLine.addItem(item);
         }
 
-        int size = heightSize + getPaddingTop() + getPaddingBottom() + (mLines.size() - 1) * mLineSpace;
-        if (findLastSelectedLine() != null) {
-            // TODO
-            size += 50;
+        Line firstSelectedLine = findFirstSelectedLine();
+        Line lastSelectedLine = findLastSelectedLine();
+        if (firstSelectedLine != null && lastSelectedLine != null) {
+            int selectedLineHeight = (lastSelectedLine.index - firstSelectedLine.index + 1) * (firstSelectedLine.getHeight() + mLineSpace);
+            mActionBar.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(selectedLineHeight, MeasureSpec.UNSPECIFIED));
         }
+
+        int size = heightSize + getPaddingTop() + getPaddingBottom() + (mLines.size() - 1) * mLineSpace + mActionBarTopHeight + mActionBarBottomHeight;
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY));
     }
 
@@ -113,25 +136,38 @@ public class BigBangLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int top;
         int left;
-        int offsetTop = 0;
+        int offsetTop;
 
-        Line selectedLine = findLastSelectedLine();
+        Line lastSelectedLine = findLastSelectedLine();
+        Line firstSelectedLine = findFirstSelectedLine();
 
         for (int i = 0; i < mLines.size(); i++) {
             Line line = mLines.get(i);
             List<Item> items = line.getItems();
-            left = getPaddingLeft();
+            left = getPaddingLeft() + mActionBar.getContentPadding();
+
+            if (firstSelectedLine != null && firstSelectedLine.index > line.index) {
+                offsetTop = -mActionBarTopHeight;
+            } else if (lastSelectedLine != null && lastSelectedLine.index < line.index) {
+                // TODO
+                offsetTop = mActionBarBottomHeight;
+            } else {
+                offsetTop = 0;
+            }
+
             for (int j = 0; j < items.size(); j++) {
                 Item item = items.get(j);
-                top = getPaddingTop() + i * (item.height + mLineSpace) + offsetTop;
+                top = getPaddingTop() + i * (item.height + mLineSpace) + offsetTop + mActionBarTopHeight;
                 View child = getChildAt(item.index);
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
                 left += child.getMeasuredWidth() + mItemSpace;
             }
-            if (selectedLine == line) {
-                // TODO
-                offsetTop = 50;
-            }
+        }
+
+        if (firstSelectedLine != null && lastSelectedLine != null) {
+
+            int actionBarTop = firstSelectedLine.index * (firstSelectedLine.getHeight() + mLineSpace) + getPaddingTop();
+            mActionBar.layout(getPaddingLeft(), actionBarTop, getPaddingLeft() + mActionBar.getMeasuredWidth(), actionBarTop + mActionBar.getMeasuredHeight());
         }
     }
 
@@ -145,15 +181,17 @@ public class BigBangLayout extends ViewGroup {
         return result;
     }
 
+    private Line findFirstSelectedLine() {
+        for (Line line : mLines) {
+            if (line.hasSelected()) {
+                return line;
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        Line lastSelectedLine = findLastSelectedLine();
-        if (lastSelectedLine != null) {
-            Paint paint = new Paint();
-            paint.setColor(Color.RED);
-            // TODO
-            canvas.drawRect(0, 0, getMeasuredWidth(), (lastSelectedLine.index + 1) * (57 + mLineSpace) + getPaddingTop() + 50 / 2, paint);
-        }
         super.onDraw(canvas);
     }
 
@@ -235,6 +273,14 @@ public class BigBangLayout extends ViewGroup {
                 }
             }
             return false;
+        }
+
+        int getHeight() {
+            List<Item> items = getItems();
+            if (items != null && items.size() > 0) {
+                return items.get(0).view.getMeasuredHeight();
+            }
+            return 0;
         }
 
     }

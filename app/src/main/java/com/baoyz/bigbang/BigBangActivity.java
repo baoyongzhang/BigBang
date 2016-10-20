@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +37,12 @@ public class BigBangActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(text)) {
 
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().get().url("http://192.168.10.42:3000/?text=" + text).build();
+            Request request = null;
+            try {
+                request = new Request.Builder().get().url("http://192.168.10.42:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
