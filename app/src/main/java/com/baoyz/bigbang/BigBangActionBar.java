@@ -4,11 +4,17 @@
  */
 package com.baoyz.bigbang;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.RectEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -51,6 +57,7 @@ public class BigBangActionBar extends ViewGroup {
         Context context = getContext();
 
         mBorder = ContextCompat.getDrawable(context, R.drawable.bigbang_action_bar_bg);
+        mBorder.setCallback(this);
 
         mSearch = new ImageView(context);
         mSearch.setImageResource(R.mipmap.bigbang_action_search);
@@ -103,7 +110,30 @@ public class BigBangActionBar extends ViewGroup {
         layoutSubView(mShare, width - mActionGap * 2 - mShare.getMeasuredWidth() - mCopy.getMeasuredWidth(), 0);
         layoutSubView(mCopy, width - mActionGap - mCopy.getMeasuredWidth(), 0);
 
-        mBorder.setBounds(0, mSearch.getMeasuredHeight() / 2, width, height);
+        Rect oldBounds = mBorder.getBounds();
+        Rect newBounds = new Rect(0, mSearch.getMeasuredHeight() / 2, width, height);
+
+        if (!oldBounds.equals(newBounds)) {
+//            PropertyValuesHolder top = PropertyValuesHolder.ofInt("top", oldBounds.top, newBounds.top);
+//            PropertyValuesHolder bottom = PropertyValuesHolder.ofInt("bottom", oldBounds.bottom, newBounds.bottom);
+//            PropertyValuesHolder left = PropertyValuesHolder.ofInt("left", oldBounds.left, newBounds.left);
+//            PropertyValuesHolder right = PropertyValuesHolder.ofInt("right", oldBounds.right, newBounds.right);
+//            ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(top, bottom, left, right);
+//            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation) {
+//                    int top = (int) animation.getAnimatedValue("top");
+//                    int bottom = (int) animation.getAnimatedValue("bottom");
+//                    int left = (int) animation.getAnimatedValue("left");
+//                    int right = (int) animation.getAnimatedValue("right");
+//                    mBorder.setBounds(left, top, right, bottom);
+//                }
+//            });
+//            valueAnimator.setDuration(200).start();
+
+
+            ObjectAnimator.ofObject(mBorder, "bounds", new RectEvaluator(), oldBounds, newBounds).setDuration(200).start();
+        }
     }
 
     private void layoutSubView(View view, int l, int t) {
@@ -118,5 +148,10 @@ public class BigBangActionBar extends ViewGroup {
 
     public int getContentPadding() {
         return mContentPadding;
+    }
+
+    @Override
+    protected boolean verifyDrawable(Drawable who) {
+        return super.verifyDrawable(who) || who == mBorder;
     }
 }

@@ -7,8 +7,6 @@ package com.baoyz.bigbang;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -69,6 +67,9 @@ public class BigBangLayout extends ViewGroup {
         mActionBar = new BigBangActionBar(getContext());
 
         addView(mActionBar, 0);
+
+
+        setClipChildren(false);
     }
 
     public void addTextItem(String text) {
@@ -158,16 +159,27 @@ public class BigBangLayout extends ViewGroup {
             for (int j = 0; j < items.size(); j++) {
                 Item item = items.get(j);
                 top = getPaddingTop() + i * (item.height + mLineSpace) + offsetTop + mActionBarTopHeight;
-                View child = getChildAt(item.index);
+                View child = item.view;
+                int oldTop = child.getTop();
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
+                if (oldTop != top) {
+                    int translationY = oldTop - top;
+                    child.setTranslationY(translationY);
+                    child.animate().translationYBy(-translationY).setDuration(200).start();
+                }
                 left += child.getMeasuredWidth() + mItemSpace;
             }
         }
 
         if (firstSelectedLine != null && lastSelectedLine != null) {
-
+            int oldTop = mActionBar.getTop();
             int actionBarTop = firstSelectedLine.index * (firstSelectedLine.getHeight() + mLineSpace) + getPaddingTop();
             mActionBar.layout(getPaddingLeft(), actionBarTop, getPaddingLeft() + mActionBar.getMeasuredWidth(), actionBarTop + mActionBar.getMeasuredHeight());
+            if (oldTop != actionBarTop) {
+                int translationY = oldTop - actionBarTop;
+                mActionBar.setTranslationY(translationY);
+                mActionBar.animate().translationYBy(-translationY).setDuration(200).start();
+            }
         }
     }
 
