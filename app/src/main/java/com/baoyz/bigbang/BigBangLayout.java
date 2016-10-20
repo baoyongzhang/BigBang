@@ -4,6 +4,8 @@
  */
 package com.baoyz.bigbang;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -33,6 +35,13 @@ public class BigBangLayout extends ViewGroup {
     private int mActionBarTopHeight;
     private int mActionBarBottomHeight;
     private BigBangActionBar mActionBar;
+    private AnimatorListenerAdapter mActionBarAnimationListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+            mActionBar.setVisibility(View.GONE);
+        }
+    };
 
     public BigBangLayout(Context context) {
         super(context);
@@ -65,9 +74,9 @@ public class BigBangLayout extends ViewGroup {
 
         // TODO 暂时放到这里
         mActionBar = new BigBangActionBar(getContext());
+        mActionBar.setVisibility(View.GONE);
 
         addView(mActionBar, 0);
-
 
         setClipChildren(false);
     }
@@ -150,7 +159,6 @@ public class BigBangLayout extends ViewGroup {
             if (firstSelectedLine != null && firstSelectedLine.index > line.index) {
                 offsetTop = -mActionBarTopHeight;
             } else if (lastSelectedLine != null && lastSelectedLine.index < line.index) {
-                // TODO
                 offsetTop = mActionBarBottomHeight;
             } else {
                 offsetTop = 0;
@@ -172,6 +180,8 @@ public class BigBangLayout extends ViewGroup {
         }
 
         if (firstSelectedLine != null && lastSelectedLine != null) {
+            mActionBar.setVisibility(View.VISIBLE);
+            mActionBar.setAlpha(1);
             int oldTop = mActionBar.getTop();
             int actionBarTop = firstSelectedLine.index * (firstSelectedLine.getHeight() + mLineSpace) + getPaddingTop();
             mActionBar.layout(getPaddingLeft(), actionBarTop, getPaddingLeft() + mActionBar.getMeasuredWidth(), actionBarTop + mActionBar.getMeasuredHeight());
@@ -179,6 +189,10 @@ public class BigBangLayout extends ViewGroup {
                 int translationY = oldTop - actionBarTop;
                 mActionBar.setTranslationY(translationY);
                 mActionBar.animate().translationYBy(-translationY).setDuration(200).start();
+            }
+        } else {
+            if (mActionBar.getVisibility() == View.VISIBLE){
+                mActionBar.animate().alpha(0).setDuration(200).setListener(mActionBarAnimationListener).start();
             }
         }
     }
