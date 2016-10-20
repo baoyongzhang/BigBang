@@ -47,7 +47,7 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
             OkHttpClient client = new OkHttpClient();
             Request request = null;
             try {
-                request = new Request.Builder().get().url("http://192.168.10.42:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
+                request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -59,24 +59,20 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String string = response.body().string();
-                    try {
-                        final JSONArray array = new JSONArray(string);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    final String string = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                final JSONArray array = new JSONArray(string);
                                 for (int i = 0; i < array.length(); i++) {
-                                    try {
-                                        mLayout.addTextItem(array.getString(i));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    mLayout.addTextItem(array.getString(i));
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        }
+                    });
                 }
             });
         }

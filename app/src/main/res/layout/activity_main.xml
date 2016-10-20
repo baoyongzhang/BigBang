@@ -15,6 +15,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="南京市长江大桥非常雄伟，有机会一定要去看一看。"/>
+        android:text="Android是一种基于Linux的自由及开放源代码的操作系统，主要使用于移动设备，如智能手机和平板电脑，由Google公司和开放手机联盟领导及开发。"/>
 
 </RelativeLayout>

@@ -12,6 +12,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -87,6 +89,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         TextView view = new TextView(getContext());
         view.setText(text);
         view.setBackgroundResource(R.drawable.item_background);
+        view.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.bigbang_item_text));
         view.setGravity(Gravity.CENTER);
         addView(view);
     }
@@ -245,6 +248,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
             case MotionEvent.ACTION_UP:
                 requestLayout();
                 invalidate();
+                mTargetItem = null;
                 break;
         }
         return true;
