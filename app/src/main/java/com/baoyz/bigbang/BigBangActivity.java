@@ -1,8 +1,14 @@
 package com.baoyz.bigbang;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +27,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class BigBangActivity extends AppCompatActivity {
+public class BigBangActivity extends AppCompatActivity implements BigBangLayout.ActionListener {
 
     public static final String EXTRA_TEXT = "extra_text";
     private BigBangLayout mLayout;
@@ -32,6 +38,8 @@ public class BigBangActivity extends AppCompatActivity {
         setContentView(R.layout.activity_big_bang);
 
         mLayout = (BigBangLayout) findViewById(R.id.bigbang);
+
+        mLayout.setActionListener(this);
 
         String text = getIntent().getStringExtra(EXTRA_TEXT);
         if (!TextUtils.isEmpty(text)) {
@@ -73,5 +81,30 @@ public class BigBangActivity extends AppCompatActivity {
             });
         }
 
+    }
+
+    @Override
+    public void onSearch(String text) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.baidu.com/s?wd=" + URLEncoder.encode(text, "utf-8")));
+            startActivity(intent);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onShare(String text) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(sharingIntent);
+    }
+
+    @Override
+    public void onCopy(String text) {
+        ClipboardManager service = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        service.setPrimaryClip(ClipData.newPlainText("BigBang", text));
+        Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
     }
 }

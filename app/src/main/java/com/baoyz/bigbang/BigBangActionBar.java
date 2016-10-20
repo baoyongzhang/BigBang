@@ -21,7 +21,7 @@ import android.widget.ImageView;
 /**
  * Created by baoyongzhang on 2016/10/20.
  */
-public class BigBangActionBar extends ViewGroup {
+class BigBangActionBar extends ViewGroup implements View.OnClickListener {
 
     ImageView mSearch;
     ImageView mShare;
@@ -29,6 +29,7 @@ public class BigBangActionBar extends ViewGroup {
     Drawable mBorder;
     private int mActionGap;
     private int mContentPadding;
+    private ActionListener mActionListener;
 
     public BigBangActionBar(Context context) {
         this(context, null);
@@ -57,10 +58,13 @@ public class BigBangActionBar extends ViewGroup {
 
         mSearch = new ImageView(context);
         mSearch.setImageResource(R.mipmap.bigbang_action_search);
+        mSearch.setOnClickListener(this);
         mShare = new ImageView(context);
         mShare.setImageResource(R.mipmap.bigbang_action_share);
+        mShare.setOnClickListener(this);
         mCopy = new ImageView(context);
         mCopy.setImageResource(R.mipmap.bigbang_action_copy);
+        mCopy.setOnClickListener(this);
 
         addView(mSearch, createLayoutParams());
         addView(mShare, createLayoutParams());
@@ -124,12 +128,36 @@ public class BigBangActionBar extends ViewGroup {
         mBorder.draw(canvas);
     }
 
+    @Override
+    protected boolean verifyDrawable(Drawable who) {
+        return super.verifyDrawable(who) || who == mBorder;
+    }
+
     public int getContentPadding() {
         return mContentPadding;
     }
 
+    public void setActionListener(ActionListener actionListener) {
+        mActionListener = actionListener;
+    }
+
     @Override
-    protected boolean verifyDrawable(Drawable who) {
-        return super.verifyDrawable(who) || who == mBorder;
+    public void onClick(View v) {
+        if (mActionListener == null) {
+            return;
+        }
+        if (v == mSearch) {
+            mActionListener.onSearch();
+        } else if (v == mShare) {
+            mActionListener.onShare();
+        } else if (v == mCopy) {
+            mActionListener.onCopy();
+        }
+    }
+
+    interface ActionListener {
+        void onSearch();
+        void onShare();
+        void onCopy();
     }
 }

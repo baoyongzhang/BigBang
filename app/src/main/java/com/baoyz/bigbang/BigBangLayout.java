@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by baoyongzhang on 2016/10/19.
  */
-public class BigBangLayout extends ViewGroup {
+public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionListener {
 
     private int mLineSpace;
     private int mItemSpace;
@@ -42,6 +42,7 @@ public class BigBangLayout extends ViewGroup {
             mActionBar.setVisibility(View.GONE);
         }
     };
+    private ActionListener mActionListener;
 
     public BigBangLayout(Context context) {
         super(context);
@@ -75,6 +76,7 @@ public class BigBangLayout extends ViewGroup {
         // TODO 暂时放到这里
         mActionBar = new BigBangActionBar(getContext());
         mActionBar.setVisibility(View.GONE);
+        mActionBar.setActionListener(this);
 
         addView(mActionBar, 0);
 
@@ -221,10 +223,10 @@ public class BigBangLayout extends ViewGroup {
         super.onDraw(canvas);
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return true;
-    }
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        return true;
+//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -273,6 +275,42 @@ public class BigBangLayout extends ViewGroup {
         return null;
     }
 
+    private String makeSelectedText() {
+        StringBuilder builder = new StringBuilder();
+        for (Line line : mLines) {
+            builder.append(line.getSelectedText());
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public void onSearch() {
+        if (mActionListener != null) {
+            String text = makeSelectedText();
+            mActionListener.onSearch(text);
+        }
+    }
+
+    @Override
+    public void onShare() {
+        if (mActionListener != null) {
+            String text = makeSelectedText();
+            mActionListener.onShare(text);
+        }
+    }
+
+    @Override
+    public void onCopy() {
+        if (mActionListener != null) {
+            String text = makeSelectedText();
+            mActionListener.onCopy(text);
+        }
+    }
+
+    public void setActionListener(ActionListener actionListener) {
+        mActionListener = actionListener;
+    }
+
     static class Line {
         int index;
         List<Item> items;
@@ -309,6 +347,19 @@ public class BigBangLayout extends ViewGroup {
             return 0;
         }
 
+        String getSelectedText() {
+            StringBuilder builder = new StringBuilder();
+            List<Item> items = getItems();
+            if (items != null && items.size() > 0) {
+                for (Item item : items) {
+                    if (item.isSelected()) {
+                        builder.append(item.getText());
+                    }
+                }
+            }
+            return builder.toString();
+        }
+
     }
 
     static class Item {
@@ -335,5 +386,15 @@ public class BigBangLayout extends ViewGroup {
         void setSelected(boolean selected) {
             view.setSelected(selected);
         }
+
+        CharSequence getText() {
+            return ((TextView)view).getText();
+        }
+    }
+
+    public interface ActionListener {
+        void onSearch(String text);
+        void onShare(String text);
+        void onCopy(String text);
     }
 }
