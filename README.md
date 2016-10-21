@@ -3,6 +3,8 @@
 本 Demo 模仿了 Smartisan OS 的 BigBang 功能。App 打开会从剪切板读取文字并显示，长按会弹出 BigBang 页面进行分词显示。如果剪切板没有内容会显示一段默认的文字。
 后台接口基于 [node-segment](https://github.com/leizongmin/node-segment) 实现分词。
 
+__由于服务是我自己搭建的，服务器性能有限，如果长时间没有显示出来可能是服务挂了，接口仅用于演示，请大家不要用在其他地方，不要高频的请求，谢谢。__
+
 <img src="https://github.com/baoyongzhang/BigBang/blob/master/design/bigbang_demo.gif" width=320/>
 
 
