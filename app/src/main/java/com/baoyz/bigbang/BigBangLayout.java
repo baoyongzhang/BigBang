@@ -13,12 +13,13 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.NestedScrollingChild;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Created by baoyongzhang on 2016/10/19.
  */
-public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionListener {
+public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionListener, NestedScrollingChild {
 
     private int mLineSpace;
     private int mItemSpace;
@@ -45,6 +46,9 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         }
     };
     private ActionListener mActionListener;
+    private int mScaledTouchSlop;
+    private float mDownX;
+    private boolean mDisallowedParentIntercept;
 
     public BigBangLayout(Context context) {
         super(context);
@@ -83,6 +87,8 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         addView(mActionBar, 0);
 
         setClipChildren(false);
+
+        mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     public void addTextItem(String text) {
@@ -196,7 +202,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
                 mActionBar.animate().translationYBy(-translationY).setDuration(200).start();
             }
         } else {
-            if (mActionBar.getVisibility() == View.VISIBLE){
+            if (mActionBar.getVisibility() == View.VISIBLE) {
                 mActionBar.animate().alpha(0).setDuration(200).setListener(mActionBarAnimationListener).start();
             }
         }
@@ -236,25 +242,61 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         int actionMasked = MotionEventCompat.getActionMasked(event);
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
+                mDownX = event.getX();
+                mDisallowedParentIntercept = false;
             case MotionEvent.ACTION_MOVE:
-                Item item = findItemFromPoint((int) event.getX(), (int) event.getY());
+                int x = (int) event.getX();
+                if (!mDisallowedParentIntercept && Math.abs(x - mDownX) > mScaledTouchSlop) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                    mDisallowedParentIntercept = true;
+                }
+                Item item = findItemByPoint(x, (int) event.getY());
                 if (mTargetItem != item) {
                     mTargetItem = item;
                     if (item != null) {
                         item.setSelected(!item.isSelected());
+                        ItemState state = new ItemState();
+                        state.item = item;
+                        state.isSelected = item.isSelected();
+                        if (mItemState == null) {
+                            mItemState = state;
+                        } else {
+                            state.next = mItemState;
+                            mItemState = state;
+                        }
                     }
                 }
                 break;
+            case MotionEvent.ACTION_CANCEL:
+                if (mItemState != null) {
+                    ItemState state = mItemState;
+                    while (state != null) {
+                        state.item.setSelected(!state.isSelected);
+                        state = state.next;
+                    }
+                }
             case MotionEvent.ACTION_UP:
                 requestLayout();
                 invalidate();
                 mTargetItem = null;
+                if (mDisallowedParentIntercept) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                mItemState = null;
                 break;
         }
         return true;
     }
 
-    private Item findItemFromPoint(int x, int y) {
+    ItemState mItemState;
+
+    class ItemState {
+        Item item;
+        boolean isSelected;
+        ItemState next;
+    }
+
+    private Item findItemByPoint(int x, int y) {
         for (Line line : mLines) {
             List<Item> items = line.getItems();
             for (Item item : items) {
@@ -266,7 +308,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         return null;
     }
 
-    private View findChildFromPoint(int x, int y) {
+    private View findChildByPoint(int x, int y) {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -392,13 +434,19 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         }
 
         CharSequence getText() {
-            return ((TextView)view).getText();
+            return ((TextView) view).getText();
         }
     }
 
+    /**
+     * Action Listener
+     */
     public interface ActionListener {
         void onSearch(String text);
+
         void onShare(String text);
+
         void onCopy(String text);
     }
+
 }

@@ -54,7 +54,12 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(BigBangActivity.this, "请求错误", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 @Override
