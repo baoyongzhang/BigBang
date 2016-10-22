@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/activity_big_bang"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_big_bang"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#8D9FB8"
+    android:fillViewport="true"
     tools:context="com.baoyz.bigbang.BigBangActivity">
 
-    <com.baoyz.bigbang.BigBangLayout
-        android:id="@+id/bigbang"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="10dp">
-    </com.baoyz.bigbang.BigBangLayout>
-</RelativeLayout>
+        android:layout_height="wrap_content">
+
+        <com.baoyz.bigbang.BigBangLayout
+            android:id="@+id/bigbang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp" />
+    </FrameLayout>
+</ScrollView>
