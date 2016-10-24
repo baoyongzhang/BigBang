@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.baoyz.bigbang.service.BigBangService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -34,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
         textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + textView.getText())));
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode(textView.getText().toString(), "utf-8"))));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });

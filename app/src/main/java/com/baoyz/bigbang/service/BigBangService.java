@@ -14,6 +14,11 @@ import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import static com.baoyz.bigbang.R.id.textView;
+
 /**
  * Created by baoyongzhang on 2016/10/24.
  */
@@ -34,7 +39,12 @@ public class BigBangService extends AccessibilityService {
                 if (isWechatUI() && "android.widget.TextView".equals(className)) {
                     AccessibilityNodeInfo source = event.getSource();
                     CharSequence text = source.getText();
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + text));
+                    Intent intent = null;
+                    try {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode(text.toString(), "utf-8")));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
