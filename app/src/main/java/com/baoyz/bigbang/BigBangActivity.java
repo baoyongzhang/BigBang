@@ -94,15 +94,6 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //默认退出复制到剪贴板中。
-        if (mLayout != null) {
-            mLayout.onCopy();
-        }
-    }
-
-    @Override
     public void onSearch(String text) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.baidu.com/s?wd=" + URLEncoder.encode(text, "utf-8")));
