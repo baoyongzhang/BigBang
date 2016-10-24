@@ -1,6 +1,7 @@
 package com.baoyz.bigbang.xposed;
 
 import android.util.Log;
+import com.baoyz.bigbang.BuildConfig;
 
 /**
  * Created by dim on 16/10/24.
@@ -8,7 +9,7 @@ import android.util.Log;
 
 public class L {
 
-    private static boolean sEnable = true;
+    private static boolean sEnable = BuildConfig.DEBUG;
     private static final String TAG = "XposedBigBang";
 
     public static void e(String tag, String msg) {
