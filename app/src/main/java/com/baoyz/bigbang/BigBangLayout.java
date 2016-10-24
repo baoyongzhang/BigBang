@@ -100,6 +100,17 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         addView(view);
     }
 
+    public void reset() {
+
+        for (int i = getChildCount() - 1; i >= 0; i--) {
+            View child = getChildAt(i);
+            if (mActionBar == child) {
+                continue;
+            }
+            removeView(child);
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
