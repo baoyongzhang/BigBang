@@ -105,6 +105,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         for (int i = getChildCount() - 1; i >= 0; i--) {
             View child = getChildAt(i);
             if (mActionBar == child) {
+                mActionBar.setVisibility(View.GONE);
                 continue;
             }
             removeView(child);

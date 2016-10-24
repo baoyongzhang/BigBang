@@ -24,8 +24,14 @@ import java.util.List;
 
 public class TouchHandler {
 
+
+    public static int BIG_BANG_RESPONSE_TIME = 800;
+    public static int INVALID_INTERVAL = 60;
+
     private static final String TAG = "TouchHandler";
     private static final Comparator<View> TOP_SORTED_CHILDREN_COMPARATOR;
+
+
 
     static {
 
@@ -37,7 +43,6 @@ public class TouchHandler {
     }
 
     private final List<View> topmostChildList = new ArrayList<>();
-    private int BIG_BANG_RESPONSE_TIME = 2000;
 
 
     public boolean hookTouchEvent(View v, MotionEvent event, List<Filter> filters) {
@@ -46,11 +51,11 @@ public class TouchHandler {
             View targetTextView = getTargetTextView(v, event, filters);
             if (targetTextView != null) {
                 L.logClass(TAG,targetTextView.getClass());
-                Object tag = targetTextView.getTag(R.id.bigBang_$$);
+                long preClickTimeMillis = getClickTimeMillis(targetTextView);
                 long currentTimeMillis = System.currentTimeMillis();
-                if (tag != null) {
-                    long interval = currentTimeMillis - Long.parseLong(tag.toString());
-                    if (interval< 60) {
+                if (preClickTimeMillis != 0) {
+                    long interval = currentTimeMillis - preClickTimeMillis;
+                    if (interval< INVALID_INTERVAL) {
                         return false;
                     }
                     if (interval < BIG_BANG_RESPONSE_TIME) {
@@ -70,11 +75,23 @@ public class TouchHandler {
                         }
                     }
                 }
-                targetTextView.setTag(R.id.bigBang_$$, currentTimeMillis);
+                setClickTimeMillis(targetTextView,currentTimeMillis);
 
             }
         }
         return handle;
+    }
+
+    public long getClickTimeMillis(View view){
+        Object preClickTimeMillis = view.getTag(R.id.bigBang_$$);
+        if(preClickTimeMillis != null){
+            return (Long)preClickTimeMillis;
+        }
+        return 0;
+    }
+
+    public void setClickTimeMillis(View view,long timeMillis){
+        view.setTag(R.id.bigBang_$$, timeMillis);
     }
 
     private View getTargetTextView(View view, MotionEvent event, List<Filter> filters) {
