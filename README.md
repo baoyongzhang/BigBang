@@ -7,6 +7,12 @@ __由于服务是我自己搭建的，服务器性能有限，如果长时间没
 
 <img src="https://github.com/baoyongzhang/BigBang/blob/master/design/bigbang_demo.gif" width=320/>
 
+# Contributors
+
+### [zzz40500](https://github.com/zzz40500/)
+```
+增加了 Xposed 的支持。
+```
 
 # License
 
