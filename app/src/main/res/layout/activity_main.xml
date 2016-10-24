@@ -12,9 +12,36 @@
     tools:context="com.baoyz.bigbang.MainActivity">
 
     <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="长按下面文字体验 BigBang"
+        android:textColor="#C0C0C0"/>
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="15dp"
         android:text="Android是一种基于Linux的自由及开放源代码的操作系统，主要使用于移动设备，如智能手机和平板电脑，由Google公司和开放手机联盟领导及开发。"/>
+
+    <Button
+        android:id="@+id/weixin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/des"
+        android:layout_marginBottom="5dp"
+        android:text="开启微信支持"
+        android:textColor="#606060"/>
+
+    <TextView
+        android:id="@+id/des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="微信支持需要开启辅助功能，目前支持聊天界面文字气泡，点击文字会打开 BigBang 页面。\n如果有 Xposed 可以开启 BigBang 模块，双击微信中的文字触发，支持聊天页面和朋友圈。"
+        android:textColor="#808080"
+        android:textSize="11sp"/>
 
 </RelativeLayout>

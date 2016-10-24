@@ -5,10 +5,14 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.baoyz.bigbang.service.BigBangService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,5 +36,20 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        Button button = (Button) findViewById(R.id.weixin);
+        if (BigBangService.isAccessibilitySettingsOn(getApplicationContext())) {
+            button.setEnabled(false);
+            button.setText("已开启微信支持");
+        } else {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+        }
+
     }
 }
