@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -53,7 +54,7 @@ public class BigBangService extends AccessibilityService {
 
     public static boolean isAccessibilitySettingsOn(Context context) {
         int accessibilityEnabled = 0;
-        final String service = context.getPackageName() + "/" + BigBangService.class.getCanonicalName();
+        final String service = getServiceKey(context);
         boolean accessibilityFound = false;
         try {
             accessibilityEnabled = Settings.Secure.getInt(
@@ -81,5 +82,10 @@ public class BigBangService extends AccessibilityService {
         }
 
         return accessibilityFound;
+    }
+
+    @NonNull
+    public static String getServiceKey(Context context) {
+        return context.getPackageName() + "/" + BigBangService.class.getCanonicalName();
     }
 }
