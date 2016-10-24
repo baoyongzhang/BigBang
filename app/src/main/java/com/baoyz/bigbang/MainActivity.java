@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BigBangActivity.class);
-                intent.putExtra(BigBangActivity.EXTRA_TEXT, textView.getText());
-                startActivity(intent);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text="+textView.getText())));
                 return true;
             }
         });

@@ -15,11 +15,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,55 +29,77 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
     private BigBangLayout mLayout;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mLayout.reset();
+        handleIntent(intent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_bang);
-
         mLayout = (BigBangLayout) findViewById(R.id.bigbang);
-
         mLayout.setActionListener(this);
+        handleIntent(getIntent());
+    }
 
-        String text = getIntent().getStringExtra(EXTRA_TEXT);
-        if (!TextUtils.isEmpty(text)) {
+    private void handleIntent(Intent intent) {
+        Uri data = intent.getData();
+        if (data != null) {
+            String text = data.getQueryParameter(EXTRA_TEXT);
 
-            OkHttpClient client = new OkHttpClient();
-            Request request = null;
-            try {
-                request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(BigBangActivity.this, "请求错误", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            if (!TextUtils.isEmpty(text)) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = null;
+                try {
+                    request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    final String string = response.body().string();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                final JSONArray array = new JSONArray(string);
-                                for (int i = 0; i < array.length(); i++) {
-                                    mLayout.addTextItem(array.getString(i));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BigBangActivity.this, "请求错误", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    });
-                }
-            });
-        }
+                        });
+                    }
 
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        final String string = response.body().string();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mLayout.reset();
+                                    final JSONArray array = new JSONArray(string);
+                                    for (int i = 0; i < array.length(); i++) {
+                                        mLayout.addTextItem(array.getString(i));
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        } else {
+            this.finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //默认退出复制到剪贴板中。
+        if (mLayout != null) {
+            mLayout.onCopy();
+        }
     }
 
     @Override
@@ -104,8 +122,10 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
 
     @Override
     public void onCopy(String text) {
-        ClipboardManager service = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        service.setPrimaryClip(ClipData.newPlainText("BigBang", text));
-        Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(text)) {
+            ClipboardManager service = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            service.setPrimaryClip(ClipData.newPlainText("BigBang", text));
+            Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
+        }
     }
 }
