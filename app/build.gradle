@@ -11,7 +11,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,4 +44,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile project(':core')
+    compile 'me.drakeet.support:about:0.9.9'
+    compile 'me.drakeet.multitype:multitype:2.2.0-beta1'
 }
