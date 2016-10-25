@@ -6,6 +6,7 @@
 __由于服务是我自己搭建的，服务器性能有限，如果长时间没有显示出来可能是服务挂了，接口仅用于演示，请大家不要用在其他地方，不要高频的请求，谢谢。__
 
 <img src="https://github.com/baoyongzhang/BigBang/blob/master/design/bigbang_demo.gif" width=320/>
+<img src="https://github.com/baoyongzhang/BigBang/blob/master/design/gitbang_demo_wechat.gif" width=320/>
 
 ### 微信支持
 
