@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button mButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,19 +48,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button button = (Button) findViewById(R.id.weixin);
+        mButton = (Button) findViewById(R.id.weixin);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (BigBangService.isAccessibilitySettingsOn(getApplicationContext())) {
-            button.setEnabled(false);
-            button.setText("已开启微信支持");
+            mButton.setEnabled(false);
+            mButton.setText("已开启微信支持");
         } else {
-            button.setOnClickListener(new View.OnClickListener() {
+            mButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openAccessibilitySettings();
                 }
             });
         }
-
     }
 
     private void openAccessibilitySettings() {
