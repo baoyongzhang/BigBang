@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.baoyz.bigbang.core.R;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,7 +70,12 @@ public class TouchHandler {
                         if (msg != null) {
                             handle = true;
                             Context context = targetTextView.getContext();
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + msg));
+                            Intent intent = null;
+                            try {
+                                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode(msg, "utf-8")));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
