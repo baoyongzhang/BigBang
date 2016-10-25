@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * Copyright (c) 2016 baoyongzhang <baoyz94@gmail.com>
  */
-package com.baoyz.bigbang.service;
+package com.baoyz.bigbang.core.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
@@ -16,8 +16,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import static com.baoyz.bigbang.R.id.textView;
 
 /**
  * Created by baoyongzhang on 2016/10/24.
@@ -69,7 +67,7 @@ public class BigBangService extends AccessibilityService {
         try {
             accessibilityEnabled = Settings.Secure.getInt(
                     context.getApplicationContext().getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+                    Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
         }
 

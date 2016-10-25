@@ -1,4 +1,4 @@
-package com.baoyz.bigbang.xposed;
+package com.baoyz.bigbang.core.xposed;
 
 import android.view.View;
 import android.widget.Button;

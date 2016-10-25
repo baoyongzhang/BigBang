@@ -1,4 +1,4 @@
-package com.baoyz.bigbang.xposed;
+package com.baoyz.bigbang.core.xposed;
 
 import android.app.Activity;
 import android.view.MotionEvent;

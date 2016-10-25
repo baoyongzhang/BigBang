@@ -1,12 +1,12 @@
-package com.baoyz.bigbang;
+package com.baoyz.bigbang.core;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -105,7 +105,7 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
 
     @Override
     public void onShare(String text) {
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(sharingIntent);

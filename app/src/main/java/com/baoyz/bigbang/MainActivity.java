@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.baoyz.bigbang.service.BigBangService;
+import com.baoyz.bigbang.core.service.BigBangService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

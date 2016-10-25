@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:background="#8D9FB8"
     android:fillViewport="true"
-    tools:context="com.baoyz.bigbang.BigBangActivity">
+    tools:context="com.baoyz.bigbang.core.BigBangActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.baoyz.bigbang.BigBangLayout
+        <com.baoyz.bigbang.core.BigBangLayout
             android:id="@+id/bigbang"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

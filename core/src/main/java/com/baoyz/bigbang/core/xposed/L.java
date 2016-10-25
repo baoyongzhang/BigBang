@@ -1,7 +1,8 @@
-package com.baoyz.bigbang.xposed;
+package com.baoyz.bigbang.core.xposed;
 
 import android.util.Log;
-import com.baoyz.bigbang.BuildConfig;
+
+import com.baoyz.bigbang.core.BuildConfig;
 
 /**
  * Created by dim on 16/10/24.

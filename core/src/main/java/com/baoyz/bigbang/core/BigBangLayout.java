@@ -2,7 +2,7 @@
  * The MIT License (MIT)
  * Copyright (c) 2016 baoyongzhang <baoyz94@gmail.com>
  */
-package com.baoyz.bigbang;
+package com.baoyz.bigbang.core;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

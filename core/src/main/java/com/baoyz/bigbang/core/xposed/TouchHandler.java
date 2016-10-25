@@ -1,4 +1,4 @@
-package com.baoyz.bigbang.xposed;
+package com.baoyz.bigbang.core.xposed;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.baoyz.bigbang.R;
+import com.baoyz.bigbang.core.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
