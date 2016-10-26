@@ -7,6 +7,7 @@ package com.baoyz.bigbang;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,5 +60,15 @@ public class AboutActivity extends me.drakeet.support.about.AboutActivity {
         super.onActionClick(action);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/baoyongzhang/BigBang"));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
