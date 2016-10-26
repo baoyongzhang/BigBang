@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/about"
-          android:icon="@mipmap/ic_info_outline_white_36dp"
-          android:title="@string/about"
-          app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/about"
+        android:icon="@mipmap/ic_info_outline_white_24dp"
+        android:title="@string/about"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/settings"
+        android:icon="@mipmap/ic_settings_white_24dp"
+        android:title="@string/settings"
+        app:showAsAction="ifRoom"/>
 </menu>

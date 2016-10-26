@@ -47,6 +47,8 @@ public class AboutActivity extends me.drakeet.support.about.AboutActivity {
         items.add(new Category("Open Source Licenses"));
         items.add(new License("BigBang", "baoyongzhang", License.MIT,
                 "https://github.com/baoyongzhang/BigBang"));
+        items.add(new License("Treasure", "baoyongzhang", License.MIT,
+                "https://github.com/baoyongzhang/Treasure"));
         items.add(new License("OkHttp", "square", License.APACHE_2,
                 "https://github.com/square/okhttp"));
         items.add(new License("MultiType", "drakeet", License.APACHE_2,

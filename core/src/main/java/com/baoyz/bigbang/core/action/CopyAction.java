@@ -24,7 +24,11 @@ public class CopyAction implements Action {
         if (!TextUtils.isEmpty(text)) {
             ClipboardManager service = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             service.setPrimaryClip(ClipData.newPlainText("BigBang", text));
-            Toast.makeText(context, "已复制", Toast.LENGTH_SHORT).show();
+            copySuccess(context);
         }
+    }
+
+    public void copySuccess(Context context) {
+        Toast.makeText(context, "已复制", Toast.LENGTH_SHORT).show();
     }
 }

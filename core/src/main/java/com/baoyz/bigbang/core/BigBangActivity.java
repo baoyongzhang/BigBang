@@ -1,16 +1,11 @@
 package com.baoyz.bigbang.core;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.baoyz.bigbang.core.action.Action;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,6 +88,13 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
         } else {
             this.finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        String selectedText = mLayout.getSelectedText();
+        BigBang.startAction(this, BigBang.ACTION_BACK, selectedText);
     }
 
     @Override

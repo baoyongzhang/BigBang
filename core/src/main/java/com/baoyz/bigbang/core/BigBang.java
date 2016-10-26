@@ -23,8 +23,9 @@ public class BigBang {
     public static final String ACTION_SEARCH = "search";
     public static final String ACTION_SHARE = "share";
     public static final String ACTION_COPY = "copy";
+    public static final String ACTION_BACK = "back";
 
-    @StringDef({ACTION_SEARCH, ACTION_SHARE, ACTION_COPY})
+    @StringDef({ACTION_SEARCH, ACTION_SHARE, ACTION_COPY, ACTION_BACK})
     @Retention(SOURCE)
     public @interface ActionType {
 

@@ -13,12 +13,13 @@ android {
         versionCode 1
         versionName "1.0 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
         release {
             def storeFilePath = properties.getProperty("storeFile")
-            storeFile (storeFilePath != null ? file(storeFilePath) : null)
+            storeFile(storeFilePath != null ? file(storeFilePath) : null)
             storePassword properties.getProperty("storePassword")
             keyAlias properties.getProperty("keyAlias")
             keyPassword properties.getProperty("keyPassword")
@@ -42,9 +43,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile project(':core')
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'me.drakeet.support:about:0.9.9'
     compile 'me.drakeet.multitype:multitype:2.2.0-beta1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:support-vector-drawable:24.2.1'
+    compile 'com.baoyz.treasure:treasure:0.7.1'
+    annotationProcessor 'com.baoyz.treasure:treasure-compiler:0.7.1'
 }

@@ -341,6 +341,10 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         return builder.toString();
     }
 
+    public String getSelectedText() {
+        return makeSelectedText();
+    }
+
     @Override
     public void onSearch() {
         if (mActionListener != null) {
