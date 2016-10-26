@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.baoyz.bigbang.core.action.Action;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -95,28 +97,17 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
 
     @Override
     public void onSearch(String text) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.baidu.com/s?wd=" + URLEncoder.encode(text, "utf-8")));
-            startActivity(intent);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        BigBang.startAction(this, BigBang.ACTION_SEARCH, text);
     }
 
     @Override
     public void onShare(String text) {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-        startActivity(sharingIntent);
+        BigBang.startAction(this, BigBang.ACTION_SHARE, text);
     }
 
     @Override
     public void onCopy(String text) {
-        if (!TextUtils.isEmpty(text)) {
-            ClipboardManager service = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            service.setPrimaryClip(ClipData.newPlainText("BigBang", text));
-            Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
-        }
+        BigBang.startAction(this, BigBang.ACTION_COPY, text);
     }
+
 }
