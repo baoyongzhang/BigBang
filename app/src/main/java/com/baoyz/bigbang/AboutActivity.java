@@ -28,7 +28,7 @@ public class AboutActivity extends me.drakeet.support.about.AboutActivity {
     protected void onCreateHeader(ImageView icon, TextView slogan, TextView version) {
         icon.setImageResource(R.mipmap.icon);
         slogan.setText("关于 BigBang");
-        version.setText("1.0 beta");
+        version.setText(BuildConfig.VERSION_NAME);
     }
 
     @Override

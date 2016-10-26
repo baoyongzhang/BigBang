@@ -10,8 +10,8 @@ android {
         applicationId "com.baoyz.bigbang"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0 beta"
+        versionCode 4
+        versionName "1.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
