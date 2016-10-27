@@ -30,4 +30,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'org.lionsoul:jcseg-core:1.9.9'
+    compile 'com.huaban:jieba-analysis:1.0.2'
 }

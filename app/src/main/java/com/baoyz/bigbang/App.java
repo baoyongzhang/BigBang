@@ -10,6 +10,7 @@ import com.baoyz.bigbang.core.BigBang;
 import com.baoyz.bigbang.core.action.CopyAction;
 import com.baoyz.bigbang.core.action.ShareAction;
 import com.baoyz.bigbang.segment.JcsegParser;
+import com.baoyz.bigbang.segment.JiebaParser;
 import com.baoyz.treasure.Treasure;
 
 /**
@@ -26,7 +27,8 @@ public class App extends Application {
         BigBang.registerAction(BigBang.ACTION_SHARE, ShareAction.create());
         BigBang.registerAction(BigBang.ACTION_BACK, Treasure.get(this, Config.class).isAutoCopy() ? CopyAction.create() : null);
 
-        BigBang.setSegmentParser(new JcsegParser(this));
+//        BigBang.setSegmentParser(new JcsegParser(this));
+        BigBang.setSegmentParser(new JiebaParser());
 
     }
 }
