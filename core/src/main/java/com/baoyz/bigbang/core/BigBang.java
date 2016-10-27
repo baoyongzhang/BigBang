@@ -8,6 +8,8 @@ import android.content.Context;
 import android.support.annotation.StringDef;
 
 import com.baoyz.bigbang.core.action.Action;
+import com.baoyz.bigbang.segment.NetworkParser;
+import com.baoyz.bigbang.segment.SimpleParser;
 
 import java.lang.annotation.Retention;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class BigBang {
     public static final String ACTION_SHARE = "share";
     public static final String ACTION_COPY = "copy";
     public static final String ACTION_BACK = "back";
+    private static SimpleParser sParser;
 
     @StringDef({ACTION_SEARCH, ACTION_SHARE, ACTION_COPY, ACTION_BACK})
     @Retention(SOURCE)
@@ -53,5 +56,17 @@ public class BigBang {
         if (action != null) {
             action.start(context, text);
         }
+    }
+
+    public static SimpleParser getSegmentParser() {
+        if (sParser == null) {
+            // TODO Default parser
+            sParser = new NetworkParser();
+        }
+        return sParser;
+    }
+
+    public static void setSegmentParser(SimpleParser parser) {
+        sParser = parser;
     }
 }

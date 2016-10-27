@@ -7,18 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.baoyz.bigbang.segment.HandlerCallback;
+import com.baoyz.bigbang.segment.SimpleParser;
 
 public class BigBangActivity extends AppCompatActivity implements BigBangLayout.ActionListener {
 
@@ -46,45 +36,27 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
         if (data != null) {
             String text = data.getQueryParameter(EXTRA_TEXT);
 
-            if (!TextUtils.isEmpty(text)) {
-                OkHttpClient client = new OkHttpClient();
-                Request request = null;
-                try {
-                    request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(BigBangActivity.this, "请求错误", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        final String string = response.body().string();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    mLayout.reset();
-                                    final JSONArray array = new JSONArray(string);
-                                    for (int i = 0; i < array.length(); i++) {
-                                        mLayout.addTextItem(array.getString(i));
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                });
+            if (TextUtils.isEmpty(text)) {
+                finish();
+                return;
             }
+
+            SimpleParser parser = BigBang.getSegmentParser();
+            parser.parse(text, new HandlerCallback<String[]>() {
+                @Override
+                public void onFinish(String[] result) {
+                    mLayout.reset();
+                    for (String str : result) {
+                        mLayout.addTextItem(str);
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(BigBangActivity.this, "分词出错：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
         } else {
             this.finish();
         }
