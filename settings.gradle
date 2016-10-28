@@ -1,1 +1,1 @@
-include ':app', ':core', ':segment'
+include ':app', ':core', ':segment', ':segment-ik', ':segment-jcseg', ':segment-jieba'

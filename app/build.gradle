@@ -29,12 +29,18 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             applicationIdSuffix '.debug'
         }
+    }
+
+    productFlavors {
+        ik {}
+        jieba {}
+        jcseg {}
     }
 }
 
@@ -52,4 +58,5 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:24.2.1'
     compile 'com.baoyz.treasure:treasure:0.7.1'
     annotationProcessor 'com.baoyz.treasure:treasure-compiler:0.7.1'
+    ikCompile project(':segment-ik')
 }

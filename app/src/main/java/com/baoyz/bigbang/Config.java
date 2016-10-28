@@ -20,4 +20,8 @@ public interface Config {
     @Default("false")
     boolean isAutoCopy();
     void setAutoCopy(boolean autoCopy);
+
+    @Default(SegmentEngine.TYPE_NETWORK)
+    String getSegmentEngine();
+    void setSegmentEngine(int segmentEngine);
 }

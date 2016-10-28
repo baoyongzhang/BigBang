@@ -7,6 +7,6 @@ package com.baoyz.bigbang.segment;
 /**
  * Created by baoyongzhang on 2016/10/27.
  */
-public abstract class SimpleParser implements Parser<String[]> {
+public abstract class SimpleParser extends AsyncParser<String[]> {
 
 }

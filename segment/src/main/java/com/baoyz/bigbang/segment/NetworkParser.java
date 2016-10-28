@@ -4,6 +4,8 @@
  */
 package com.baoyz.bigbang.segment;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -21,19 +23,19 @@ import okhttp3.Response;
  */
 public class NetworkParser extends SimpleParser {
 
+    private OkHttpClient mClient;
+
+    public NetworkParser() {
+        mClient = new OkHttpClient();
+    }
+
     @Override
     public void parse(String text, final Callback<String[]> callback) {
         if (callback == null) {
             return;
         }
-        OkHttpClient client = new OkHttpClient();
-        Request request = null;
-        try {
-            request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        client.newCall(request).enqueue(new okhttp3.Callback() {
+        Request request = createRequest(text);
+        mClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.error(e);
@@ -56,5 +58,16 @@ public class NetworkParser extends SimpleParser {
                 }
             }
         });
+    }
+
+    @Nullable
+    private Request createRequest(String text) {
+        Request request = null;
+        try {
+            request = new Request.Builder().get().url("http://fenci.kitdroid.org:3000/?text=" + URLEncoder.encode(text, "utf-8")).build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return request;
     }
 }
