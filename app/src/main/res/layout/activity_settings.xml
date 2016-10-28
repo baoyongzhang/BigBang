@@ -7,6 +7,30 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/segment_engine"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="默认分词引擎"/>
+
+        <TextView
+            android:id="@+id/segment_engine_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            tools:text="网络 API"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/search_engine"
         android:layout_width="match_parent"
         android:layout_height="46dp"

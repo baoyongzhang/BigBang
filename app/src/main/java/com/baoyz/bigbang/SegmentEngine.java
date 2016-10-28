@@ -6,8 +6,10 @@ package com.baoyz.bigbang;
 
 import android.content.Context;
 
-import com.baoyz.bigbang.segment.NetworkParserFactory;
-import com.baoyz.bigbang.segment.SimpleParserFactory;
+import com.baoyz.bigbang.core.BigBang;
+import com.baoyz.bigbang.segment.CharacterParser;
+import com.baoyz.bigbang.segment.NetworkParser;
+import com.baoyz.bigbang.segment.SimpleParser;
 import com.baoyz.treasure.Treasure;
 
 /**
@@ -19,16 +21,44 @@ public class SegmentEngine {
     public static final String TYPE_NETWORK = "network";   // 网络API分词
     public static final String TYPE_THIRD = "third";     // 第三方库分词
 
-    public static SimpleParserFactory getSegmentParserFactory(Context context) {
+    public static final String[] ENGINE_LIST = new String[]{TYPE_CHARACTER, TYPE_NETWORK, TYPE_THIRD};
+    public static final String[] ENGINE_NAME_LIST = new String[]{"单字符", "网络 API", "第三方"};
+
+    public static SimpleParser getSegmentParser(Context context) {
         String segmentEngine = Treasure.get(context, Config.class).getSegmentEngine();
         switch (segmentEngine) {
             case TYPE_CHARACTER:
-                // TODO
-                return null;
+                return new CharacterParser();
             case TYPE_NETWORK:
-                return new NetworkParserFactory();
+                return new NetworkParser();
             case TYPE_THIRD:
-                return new ThirdPartyParserFactory();
+                return new ThirdPartyParser();
+        }
+        return null;
+    }
+
+    public static void setup(Context context) {
+        SimpleParser parser = SegmentEngine.getSegmentParser(context);
+        BigBang.setSegmentParser(parser);
+    }
+
+    public static String[] getSupportSegmentEngineNameList() {
+        return ENGINE_NAME_LIST;
+    }
+
+    public static String[] getSupportSegmentEngineList() {
+        return ENGINE_LIST;
+    }
+
+    public static String getSegmentEngineName(Context context) {
+        String segmentEngine = Treasure.get(context, Config.class).getSegmentEngine();
+        switch (segmentEngine) {
+            case TYPE_CHARACTER:
+                return ENGINE_NAME_LIST[0];
+            case TYPE_NETWORK:
+                return ENGINE_NAME_LIST[1];
+            case TYPE_THIRD:
+                return ENGINE_NAME_LIST[2];
         }
         return null;
     }

@@ -25,6 +25,7 @@ import com.baoyz.treasure.Treasure;
 public class SettingsActivity extends AppCompatActivity {
 
     private TextView mSearchEngineText;
+    private TextView mSegmentEngineText;
     private SwitchCompat mAutoCopySwitch;
     private Config mConfig;
 
@@ -34,6 +35,24 @@ public class SettingsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_settings);
 
+        // 默认分词引擎
+        findViewById(R.id.segment_engine).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(SettingsActivity.this).setItems(SegmentEngine.getSupportSegmentEngineNameList(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mConfig.setSegmentEngine(SegmentEngine.getSupportSegmentEngineList()[which]);
+                        SegmentEngine.setup(getApplicationContext());
+                        updateUI();
+                    }
+                }).show();
+            }
+        });
+
+        mSegmentEngineText = (TextView) findViewById(R.id.segment_engine_text);
+
+        // 默认搜索引擎
         findViewById(R.id.search_engine).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mSearchEngineText = (TextView) findViewById(R.id.search_engine_text);
 
+        // 返回自动复制
         mAutoCopySwitch = (SwitchCompat) findViewById(R.id.auto_copy_switch);
         mAutoCopySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -68,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void updateUI() {
         mSearchEngineText.setText(mConfig.getSearchEngine());
+        mSegmentEngineText.setText(SegmentEngine.getSegmentEngineName(getApplicationContext()));
         mAutoCopySwitch.setChecked(mConfig.isAutoCopy());
     }
 

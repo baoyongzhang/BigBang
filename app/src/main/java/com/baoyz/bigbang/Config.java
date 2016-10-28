@@ -23,5 +23,5 @@ public interface Config {
 
     @Default(SegmentEngine.TYPE_NETWORK)
     String getSegmentEngine();
-    void setSegmentEngine(int segmentEngine);
+    void setSegmentEngine(String segmentEngine);
 }
