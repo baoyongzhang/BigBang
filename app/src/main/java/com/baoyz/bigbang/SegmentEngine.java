@@ -22,7 +22,7 @@ public class SegmentEngine {
     public static final String TYPE_THIRD = "third";     // 第三方库分词
 
     public static final String[] ENGINE_LIST = new String[]{TYPE_CHARACTER, TYPE_NETWORK, TYPE_THIRD};
-    public static final String[] ENGINE_NAME_LIST = new String[]{"单字符", "网络 API", "第三方"};
+    public static final String[] ENGINE_NAME_LIST = new String[]{"单字符", "网络 API", "本地三方库"};
 
     public static SimpleParser getSegmentParser(Context context) {
         String segmentEngine = Treasure.get(context, Config.class).getSegmentEngine();
@@ -32,7 +32,7 @@ public class SegmentEngine {
             case TYPE_NETWORK:
                 return new NetworkParser();
             case TYPE_THIRD:
-                return new ThirdPartyParser();
+                return new ThirdPartyParser(context);
         }
         return null;
     }

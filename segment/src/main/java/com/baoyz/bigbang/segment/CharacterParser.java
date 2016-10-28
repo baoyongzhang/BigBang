@@ -11,8 +11,7 @@ public class CharacterParser extends SimpleParser {
 
     @Override
     public String[] parseSync(String text) throws SegmentException {
-        // TODO 应该用正则替换
-        text = text.replaceAll(" ", "").replaceAll("\n", "");
+        text = SegmentUtil.filterInvalidChar(text);
         char[] chars = text.toCharArray();
         String[] result = new String[chars.length];
         for (int i = 0; i < chars.length; i++) {

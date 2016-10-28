@@ -59,4 +59,6 @@ dependencies {
     compile 'com.baoyz.treasure:treasure:0.7.1'
     annotationProcessor 'com.baoyz.treasure:treasure-compiler:0.7.1'
     ikCompile project(':segment-ik')
+    jcsegCompile project(':segment-jcseg')
+    jiebaCompile project(':segment-jieba')
 }

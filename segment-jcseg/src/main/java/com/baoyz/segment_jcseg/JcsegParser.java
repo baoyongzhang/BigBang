@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.baoyz.bigbang.segment.SegmentException;
+import com.baoyz.bigbang.segment.SegmentUtil;
 import com.baoyz.bigbang.segment.SimpleParser;
 
 import org.lionsoul.jcseg.tokenizer.core.ADictionary;
@@ -49,7 +50,7 @@ public class JcsegParser extends SimpleParser {
 
     @Override
     public String[] parseSync(String text) throws SegmentException {
-        text = text.replaceAll("\n", "").replace(" ", "");
+        text = SegmentUtil.filterInvalidChar(text);
         try {
             ISegment segment = SegmentFactory.createJcseg(JcsegTaskConfig.COMPLEX_MODE, new Object[]{new StringReader(text), mConfig, mDic});
             IWord word;
