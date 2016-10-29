@@ -4,6 +4,7 @@
  */
 package com.baoyz.bigbang;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.baoyz.bigbang.segment.Callback;
@@ -16,9 +17,10 @@ import com.baoyz.segment_ik.IKSegmenterParser;
  */
 public class ThirdPartyParser extends SimpleParser {
 
-    private IKSegmenterParser mParser = new IKSegmenterParser();
+    private IKSegmenterParser mParser;
 
     public ThirdPartyParser(Context context) {
+        mParser = new IKSegmenterParser((Application) context.getApplicationContext());
     }
 
     @Override
