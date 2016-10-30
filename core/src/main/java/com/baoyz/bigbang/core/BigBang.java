@@ -27,6 +27,15 @@ public class BigBang {
     public static final String ACTION_COPY = "copy";
     public static final String ACTION_BACK = "back";
     private static SimpleParser sParser;
+    private static int sItemSpace;
+    private static int sLineSpace;
+    private static int sItemTextSize;
+
+    public static void setStyle(int itemSpace, int lineSpace, int itemTextSize) {
+        sItemSpace = itemSpace;
+        sLineSpace = lineSpace;
+        sItemTextSize = itemTextSize;
+    }
 
     @StringDef({ACTION_SEARCH, ACTION_SHARE, ACTION_COPY, ACTION_BACK})
     @Retention(SOURCE)

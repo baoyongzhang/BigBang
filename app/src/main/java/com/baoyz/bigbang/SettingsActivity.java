@@ -5,11 +5,11 @@
 package com.baoyz.bigbang;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -77,6 +77,13 @@ public class SettingsActivity extends AppCompatActivity {
                 mConfig.setAutoCopy(isChecked);
                 BigBang.registerAction(BigBang.ACTION_BACK, mConfig.isAutoCopy() ? CopyAction.create() : null);
                 updateUI();
+            }
+        });
+
+        findViewById(R.id.bigbang_style).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, StyleActivity.class));
             }
         });
 

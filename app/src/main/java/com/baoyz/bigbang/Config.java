@@ -24,4 +24,16 @@ public interface Config {
     @Default(SegmentEngine.TYPE_NETWORK)
     String getSegmentEngine();
     void setSegmentEngine(String segmentEngine);
+
+    @Default("8")
+    int getLineSpace();
+    void setLineSpace(int space);
+
+    @Default("0")
+    int getItemSpace();
+    void setItemSpace(int space);
+
+    @Default("14")
+    int getItemTextSize();
+    void setItemTextSize(int size);
 }

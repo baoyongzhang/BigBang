@@ -23,8 +23,11 @@ public class App extends Application {
         BigBang.registerAction(BigBang.ACTION_SEARCH, SearchEngine.getSearchAction(this));
         BigBang.registerAction(BigBang.ACTION_COPY, CopyAction.create());
         BigBang.registerAction(BigBang.ACTION_SHARE, ShareAction.create());
-        BigBang.registerAction(BigBang.ACTION_BACK, Treasure.get(this, Config.class).isAutoCopy() ? CopyAction.create() : null);
+        Config config = Treasure.get(this, Config.class);
+        BigBang.registerAction(BigBang.ACTION_BACK, config.isAutoCopy() ? CopyAction.create() : null);
 
         SegmentEngine.setup(this);
+
+        BigBang.setStyle(config.getItemSpace(), config.getLineSpace(), config.getItemTextSize());
     }
 }

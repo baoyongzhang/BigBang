@@ -89,6 +89,43 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         setClipChildren(false);
 
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+
+        if (isInEditMode()) {
+            // 测试预览数据
+            addTextItem("BigBang");
+            addTextItem("是");
+            addTextItem("一个");
+            addTextItem("非常");
+            addTextItem("实用");
+            addTextItem("的");
+            addTextItem("功能");
+            addTextItem("！");
+        }
+    }
+
+    public void setItemSpace(int itemSpace) {
+        mItemSpace = itemSpace;
+        requestLayout();
+    }
+
+    public void setLineSpace(int lineSpace) {
+        mLineSpace = lineSpace;
+        mActionBarBottomHeight = mLineSpace;
+        requestLayout();
+    }
+
+    public void setItemTextSize(int sp) {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            if (child instanceof TextView) {
+                ((TextView) child).setTextSize(sp);
+            }
+        }
+    }
+
+    public void setItemMinWidht(int dp) {
+
     }
 
     public void addTextItem(String text) {
@@ -98,6 +135,13 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         view.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.bigbang_item_text));
         view.setGravity(Gravity.CENTER);
         addView(view);
+    }
+
+    public void setTextItems(String... items) {
+        reset();
+        for (String item : items) {
+            addTextItem(item);
+        }
     }
 
     public void reset() {
