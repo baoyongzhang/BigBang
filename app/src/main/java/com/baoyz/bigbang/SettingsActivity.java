@@ -7,6 +7,7 @@ package com.baoyz.bigbang;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.bigbang.core.BigBang;
 import com.baoyz.bigbang.core.action.CopyAction;
@@ -45,6 +47,10 @@ public class SettingsActivity extends AppCompatActivity {
                         mConfig.setSegmentEngine(SegmentEngine.getSupportSegmentEngineList()[which]);
                         SegmentEngine.setup(getApplicationContext());
                         updateUI();
+                        if (SegmentEngine.TYPE_THIRD.equals(SegmentEngine.getSegmentParserType(getApplicationContext()))) {
+                            new AlertDialog.Builder(SettingsActivity.this).setMessage("本地分词第一次使用的会比较慢，需要将字典加载到内存，会额外占用一部分内存空间。")
+                                    .setPositiveButton("确定", null).show();
+                        }
                     }
                 }).show();
             }

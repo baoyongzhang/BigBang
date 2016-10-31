@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void openAccessibilitySettings() {
         new AlertDialog.Builder(this)
                 .setMessage("不需要 root，需要在系统设置中开启权限，前往设置页面，找到 `BigBang`，然后开启。")
-                .setNeutralButton("前往设置", new DialogInterface.OnClickListener() {
+                .setPositiveButton("前往设置", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));

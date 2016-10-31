@@ -78,7 +78,9 @@ class CharacterUtil {
 			}
 		}
 		//其他的不做处理的字符
-		return CHAR_USELESS;
+//		return CHAR_USELESS;
+		// TODO 这样写就可以显示标点符号
+		return CHAR_ENGLISH;
 	}
 	
 	/**
@@ -87,15 +89,16 @@ class CharacterUtil {
 	 * @return char
 	 */
 	static char regularize(char input){
-        if (input == 12288) {
-            input = (char) 32;
-            
-        }else if (input > 65280 && input < 65375) {
-            input = (char) (input - 65248);
-            
-        }else if (input >= 'A' && input <= 'Z') {
-        	input += 32;
-		}
+		// TODO 不需要转换，要不英文都是小写
+//        if (input == 12288) {
+//            input = (char) 32;
+//
+//        }else if (input > 65280 && input < 65375) {
+//            input = (char) (input - 65248);
+//
+//        }else if (input >= 'A' && input <= 'Z') {
+//        	input += 32;
+//		}
         
         return input;
 	}

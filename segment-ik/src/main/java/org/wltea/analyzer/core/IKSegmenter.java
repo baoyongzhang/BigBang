@@ -99,8 +99,10 @@ public final class IKSegmenter {
 	 */
 	private List<ISegmenter> loadSegmenters(){
 		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);
+		//处理特殊符号
+		segmenters.add(new UselessSegmenter());
 		//处理字母的子分词器
-		segmenters.add(new LetterSegmenter()); 
+		segmenters.add(new LetterSegmenter());
 		//处理中文数量词的子分词器
 		segmenters.add(new CN_QuantifierSegmenter());
 		//处理中文词的子分词器

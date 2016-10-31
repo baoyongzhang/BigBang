@@ -183,13 +183,13 @@ class LetterSegmenter implements ISegmenter {
 	private boolean processEnglishLetter(AnalyzeContext context){
 		boolean needLock = false;
 		
-		if(this.englishStart == -1){//当前的分词器尚未开始处理英文字符	
+		if(this.englishStart == -1){//当前的分词器尚未开始处理英文字符
 			if(CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()){
 				//记录起始指针的位置,标明分词器进入处理状态
 				this.englishStart = context.getCursor();
 				this.englishEnd = this.englishStart;
 			}
-		}else {//当前的分词器正在处理英文字符	
+		}else {//当前的分词器正在处理英文字符
 			if(CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()){
 				//记录当前指针位置为结束位置
 				this.englishEnd =  context.getCursor();
@@ -201,7 +201,7 @@ class LetterSegmenter implements ISegmenter {
 				this.englishEnd= -1;
 			}
 		}
-		
+
 		//判断缓冲区是否已经读完
 		if(context.isBufferConsumed()){
 			if(this.englishStart != -1 && this.englishEnd != -1){
@@ -211,8 +211,8 @@ class LetterSegmenter implements ISegmenter {
 				this.englishStart = -1;
 				this.englishEnd= -1;
 			}
-		}	
-		
+		}
+
 		//判断是否锁定缓冲区
 		if(this.englishStart == -1 && this.englishEnd == -1){
 			//对缓冲区解锁

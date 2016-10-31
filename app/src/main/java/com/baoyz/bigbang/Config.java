@@ -25,7 +25,7 @@ public interface Config {
     String getSegmentEngine();
     void setSegmentEngine(String segmentEngine);
 
-    @Default("8")
+    @Default("10")
     int getLineSpace();
     void setLineSpace(int space);
 
@@ -33,7 +33,7 @@ public interface Config {
     int getItemSpace();
     void setItemSpace(int space);
 
-    @Default("14")
+    @Default("15")
     int getItemTextSize();
     void setItemTextSize(int size);
 }
