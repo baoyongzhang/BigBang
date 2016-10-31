@@ -78,4 +78,16 @@ public class BigBang {
     public static void setSegmentParser(SimpleParser parser) {
         sParser = parser;
     }
+
+    public static int getItemSpace() {
+        return sItemSpace;
+    }
+
+    public static int getLineSpace() {
+        return sLineSpace;
+    }
+
+    public static int getItemTextSize() {
+        return sItemTextSize;
+    }
 }

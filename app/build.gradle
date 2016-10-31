@@ -61,4 +61,5 @@ dependencies {
     ikCompile project(':segment-ik')
     jcsegCompile project(':segment-jcseg')
     jiebaCompile project(':segment-jieba')
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
 }

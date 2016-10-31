@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:dsb_max="24"
-        app:dsb_min="12"/>
+        app:dsb_min="10"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:dsb_max="60"
+        app:dsb_max="30"
         app:dsb_min="5"/>
 
     <TextView

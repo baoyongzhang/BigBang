@@ -28,6 +28,9 @@ public class BigBangActivity extends AppCompatActivity implements BigBangLayout.
         setContentView(R.layout.activity_big_bang);
         mLayout = (BigBangLayout) findViewById(R.id.bigbang);
         mLayout.setActionListener(this);
+        if (BigBang.getItemSpace() > 0) mLayout.setItemSpace(BigBang.getItemSpace());
+        if (BigBang.getLineSpace() > 0) mLayout.setLineSpace(BigBang.getLineSpace());
+        if (BigBang.getItemTextSize() > 0) mLayout.setItemTextSize(BigBang.getItemTextSize());
         handleIntent(getIntent());
     }
 

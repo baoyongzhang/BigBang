@@ -3,5 +3,6 @@
     <declare-styleable name="BigBangLayout">
         <attr name="itemSpace" format="dimension"/>
         <attr name="lineSpace" format="dimension"/>
+        <attr name="textSize" format="dimension"/>
     </declare-styleable>
 </resources>

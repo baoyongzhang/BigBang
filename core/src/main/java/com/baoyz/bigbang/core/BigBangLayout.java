@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +34,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
 
     private int mLineSpace;
     private int mItemSpace;
+    private int mItemTextSize;
     private Item mTargetItem;
     private List<Line> mLines;
     private int mActionBarTopHeight;
@@ -74,6 +76,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BigBangLayout);
             mItemSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_itemSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_item_space));
             mLineSpace = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_lineSpace, getResources().getDimensionPixelSize(R.dimen.big_bang_default_line_space));
+            mItemTextSize = typedArray.getDimensionPixelSize(R.styleable.BigBangLayout_textSize, getResources().getDimensionPixelSize(R.dimen.big_bang_default_text_size));
             typedArray.recycle();
             mActionBarBottomHeight = mLineSpace;
             mActionBarTopHeight = getResources().getDimensionPixelSize(R.dimen.big_bang_action_bar_height);
@@ -104,22 +107,23 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
     }
 
     public void setItemSpace(int itemSpace) {
-        mItemSpace = itemSpace;
+        mItemSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, itemSpace, getResources().getDisplayMetrics());
         requestLayout();
     }
 
     public void setLineSpace(int lineSpace) {
-        mLineSpace = lineSpace;
+        mLineSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, lineSpace, getResources().getDisplayMetrics());
         mActionBarBottomHeight = mLineSpace;
         requestLayout();
     }
 
     public void setItemTextSize(int sp) {
+        mItemTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             if (child instanceof TextView) {
-                ((TextView) child).setTextSize(sp);
+                ((TextView) child).setTextSize(TypedValue.COMPLEX_UNIT_PX, mItemTextSize);
             }
         }
     }
@@ -134,6 +138,7 @@ public class BigBangLayout extends ViewGroup implements BigBangActionBar.ActionL
         view.setBackgroundResource(R.drawable.item_background);
         view.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.bigbang_item_text));
         view.setGravity(Gravity.CENTER);
+        if (mItemTextSize > 0) view.setTextSize(TypedValue.COMPLEX_UNIT_PX, mItemTextSize);
         addView(view);
     }
 
