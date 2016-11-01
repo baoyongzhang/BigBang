@@ -34,9 +34,11 @@ public final class ListenClipboardService extends Service {
     private void showAction() {
         ClipData primaryClip = mClipboardManager.getPrimaryClip();
         if (primaryClip != null && primaryClip.getItemCount() > 0) {
-            CharSequence text = primaryClip.getItemAt(0).getText();
-            mFloatingView.setText(text.toString());
-            mFloatingView.show();
+            CharSequence text = primaryClip.getItemAt(0).coerceToText(this);
+            if (text != null) {
+                mFloatingView.setText(text.toString());
+                mFloatingView.show();
+            }
         }
     }
 
