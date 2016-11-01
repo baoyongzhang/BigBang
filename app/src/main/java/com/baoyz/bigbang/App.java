@@ -31,6 +31,8 @@ public class App extends Application {
 
         BigBang.setStyle(config.getItemSpace(), config.getLineSpace(), config.getItemTextSize());
 
-        ListenClipboardService.start(this);
+        if (config.isListenClipboard()) {
+            ListenClipboardService.start(this);
+        }
     }
 }

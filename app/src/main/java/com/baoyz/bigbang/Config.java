@@ -21,6 +21,10 @@ public interface Config {
     boolean isAutoCopy();
     void setAutoCopy(boolean autoCopy);
 
+    @Default("true")
+    boolean isListenClipboard();
+    void setListenClipboard(boolean listenClipboard);
+
     @Default(SegmentEngine.TYPE_NETWORK)
     String getSegmentEngine();
     void setSegmentEngine(String segmentEngine);

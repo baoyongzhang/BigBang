@@ -2,7 +2,7 @@
     <string name="app_name">BigBang</string>
     <string name="about">关于</string>
     <string name="description">
-        模仿了 Smartisan OS 的 BigBang 功能。App 打开会从剪切板读取文字并显示，长按会弹出 BigBang 页面进行分词显示。如果剪切板没有内容会显示一段默认的文字。 后台接口基于 node-segment 实现分词。\n支持在微信中使用 BigBang，提供两种方案。\n免 root 方案：需要在系统设置中开启权限，目前仅支持聊天气泡文字，点击文字就可以打开 BigBang 页面。\nXposed 方案：需要安装 Xposed 框架，在 Xposed 中可以找到 BigBang 模块，目前支持聊天气泡文字和朋友圈文字，点击两下触发。\n\n我的微信：baoyongzhang   邮箱：baoyz@live.com
+        模仿了 Smartisan OS 的 BigBang 功能。App 打开会从剪切板读取文字并显示，长按会弹出 BigBang 页面进行分词显示。 支持监听剪切板，当有复制内容会弹出一个按钮以打开 BigBang 分词页面。\n支持在微信中使用 BigBang，提供两种方案。\n免 root 方案：需要在系统设置中开启权限，目前仅支持聊天气泡文字，点击文字就可以打开 BigBang 页面。\nXposed 方案：需要安装 Xposed 框架，在 Xposed 中可以找到 BigBang 模块，目前支持聊天气泡文字和朋友圈文字，点击两下触发。\n\n我的微信：baoyongzhang   邮箱：baoyz@live.com
     </string>
     <string name="settings">设置</string>
     <string name="style">样式</string>

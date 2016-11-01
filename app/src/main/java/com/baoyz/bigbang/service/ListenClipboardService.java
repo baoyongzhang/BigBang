@@ -31,6 +31,11 @@ public final class ListenClipboardService extends Service {
         context.startService(serviceIntent);
     }
 
+    public static void stop(Context context) {
+        Intent serviceIntent = new Intent(context, ListenClipboardService.class);
+        context.stopService(serviceIntent);
+    }
+
     private void showAction() {
         ClipData primaryClip = mClipboardManager.getPrimaryClip();
         if (primaryClip != null && primaryClip.getItemCount() > 0) {

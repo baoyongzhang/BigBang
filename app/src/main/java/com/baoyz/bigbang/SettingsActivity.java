@@ -7,7 +7,6 @@ package com.baoyz.bigbang;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -15,10 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.bigbang.core.BigBang;
 import com.baoyz.bigbang.core.action.CopyAction;
+import com.baoyz.bigbang.service.ListenClipboardService;
 import com.baoyz.treasure.Treasure;
 
 /**
@@ -29,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView mSearchEngineText;
     private TextView mSegmentEngineText;
     private SwitchCompat mAutoCopySwitch;
+    private SwitchCompat mListenClipboardSwitch;
     private Config mConfig;
 
     @Override
@@ -86,6 +86,21 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // 返回自动复制
+        mListenClipboardSwitch = (SwitchCompat) findViewById(R.id.listen_clipboard_switch);
+        mListenClipboardSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mConfig.setListenClipboard(isChecked);
+                if (mConfig.isListenClipboard()) {
+                    ListenClipboardService.start(getApplicationContext());
+                } else {
+                    ListenClipboardService.stop(getApplicationContext());
+                }
+                updateUI();
+            }
+        });
+
         findViewById(R.id.bigbang_style).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
         mSearchEngineText.setText(mConfig.getSearchEngine());
         mSegmentEngineText.setText(SegmentEngine.getSegmentEngineName(getApplicationContext()));
         mAutoCopySwitch.setChecked(mConfig.isAutoCopy());
+        mListenClipboardSwitch.setChecked(mConfig.isListenClipboard());
     }
 
     @Override
