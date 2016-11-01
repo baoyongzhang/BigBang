@@ -9,6 +9,7 @@ import android.app.Application;
 import com.baoyz.bigbang.core.BigBang;
 import com.baoyz.bigbang.core.action.CopyAction;
 import com.baoyz.bigbang.core.action.ShareAction;
+import com.baoyz.bigbang.service.ListenClipboardService;
 import com.baoyz.treasure.Treasure;
 
 /**
@@ -29,5 +30,7 @@ public class App extends Application {
         SegmentEngine.setup(this);
 
         BigBang.setStyle(config.getItemSpace(), config.getLineSpace(), config.getItemTextSize());
+
+        ListenClipboardService.start(this);
     }
 }
