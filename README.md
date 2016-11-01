@@ -14,6 +14,9 @@ __由于服务是我自己搭建的，服务器性能有限，如果长时间没
 * 免 root 方案：需要在系统设置中开启权限，目前仅支持聊天气泡文字，点击文字就可以打开 BigBang 页面。
 * Xposed 方案：需要安装 Xposed 框架，在 Xposed 中可以找到 BigBang 模块，目前支持聊天气泡文字和朋友圈文字，点击两下触发。
 
+### Download
+<a href='https://play.google.com/store/apps/details?id=com.baoyz.bigbang&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' width=160 src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+
 # Contributors
 
 ### [zzz40500](https://github.com/zzz40500/)
