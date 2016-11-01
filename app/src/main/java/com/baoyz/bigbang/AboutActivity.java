@@ -51,6 +51,10 @@ public class AboutActivity extends me.drakeet.support.about.AboutActivity {
                 "https://github.com/baoyongzhang/Treasure"));
         items.add(new License("OkHttp", "square", License.APACHE_2,
                 "https://github.com/square/okhttp"));
+        items.add(new License("discrete-seekbar", "AnderWeb", License.APACHE_2,
+                "https://github.com/AnderWeb/discreteSeekBar"));
+        items.add(new License("IK-Analyzer", "wltea", License.APACHE_2,
+                "http://git.oschina.net/wltea/IK-Analyzer-2012FF"));
         items.add(new License("MultiType", "drakeet", License.APACHE_2,
                 "https://github.com/drakeet/MultiType"));
         items.add(new License("about-page", "drakeet", License.APACHE_2,
