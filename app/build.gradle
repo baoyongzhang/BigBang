@@ -50,7 +50,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile project(':core')
+    releaseCompile project(path: ':core', configuration: 'release')
+    debugCompile project(path: ':core', configuration: 'debug')
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'me.drakeet.support:about:0.9.9'
     compile 'me.drakeet.multitype:multitype:2.2.0-beta1'

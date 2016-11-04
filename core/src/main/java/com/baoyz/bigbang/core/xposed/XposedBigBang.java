@@ -6,11 +6,15 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+import static com.baoyz.bigbang.core.xposed.XposedConstant.*;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
@@ -23,12 +27,20 @@ public class XposedBigBang implements IXposedHookLoadPackage {
 
     private final TouchHandler mTouchHandler = new TouchHandler();
     private final List<Filter> mFilters = new ArrayList<>();
+    private static boolean bigbangEnable = true;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
-
+        setXpoedEnable(loadPackageParam);
+        XSharedPreferences appXSP = new XSharedPreferences(PACKAGE_NAME, SP_NAME);
+        appXSP.makeWorldReadable();
+        Set<String> disAppSet = appXSP.getStringSet(SP_DISABLE_KEY, null);
+        if (disAppSet != null && disAppSet.contains(loadPackageParam.packageName)) {
+            bigbangEnable = false;
+        } else {
+            bigbangEnable = true;
+        }
         mFilters.add(new Filter.TextViewValidFilter());
-
         //优化微信 下的体验。
         if ("com.tencent.mm".equals(loadPackageParam.packageName)) {
             //朋友圈内容拦截。
@@ -45,6 +57,21 @@ public class XposedBigBang implements IXposedHookLoadPackage {
         }
     }
 
+    public static boolean isBigBangEnable() {
+        return bigbangEnable;
+    }
+
+    private void setXpoedEnable(XC_LoadPackage.LoadPackageParam loadPackageParam) throws ClassNotFoundException {
+        if (loadPackageParam.packageName.startsWith("com.baoyz.bigbang")) {
+            findAndHookMethod(loadPackageParam.classLoader.loadClass("com.baoyz.bigbang.core.xposed.XposedEnable"), "isEnable", new XC_MethodReplacement() {
+                @Override
+                protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                    return true;
+                }
+            });
+        }
+    }
+
 
     private class MMTextViewTouchEvent extends XC_MethodHook {
 
@@ -53,6 +80,9 @@ public class XposedBigBang implements IXposedHookLoadPackage {
         @Override
         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
             super.beforeHookedMethod(param);
+            if (!XposedBigBang.isBigBangEnable()) {
+                return;
+            }
             //拦截聊天界面快速点击进入信息详情
             View view = (View) param.thisObject;
             MotionEvent event = (MotionEvent) param.args[0];
@@ -73,7 +103,7 @@ public class XposedBigBang implements IXposedHookLoadPackage {
                     }
                     break;
             }
-            mTouchHandler.hookTouchEvent(view, event, mFilters);
+            mTouchHandler.hookTouchEvent(view, event, mFilters, false);
             if (intercept) {
                 param.setResult(true);
             }
@@ -87,11 +117,14 @@ public class XposedBigBang implements IXposedHookLoadPackage {
         @Override
         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
             super.beforeHookedMethod(param);
+            if (!XposedBigBang.isBigBangEnable()) {
+                return;
+            }
             Activity activity = (Activity) param.thisObject;
             View view = activity.findViewById(android.R.id.content);
             MotionEvent event = (MotionEvent) param.args[0];
             L.d(TAG, "activityTouchEvent: " + event.getAction());
-            mTouchHandler.hookTouchEvent(view, event, mFilters);
+            mTouchHandler.hookTouchEvent(view, event, mFilters, true);
         }
     }
 
@@ -101,12 +134,15 @@ public class XposedBigBang implements IXposedHookLoadPackage {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
             super.afterHookedMethod(param);
+            if (!XposedBigBang.isBigBangEnable()) {
+                return;
+            }
             if ((Boolean) param.getResult()) {
                 View view = (View) param.thisObject;
                 MotionEvent event = (MotionEvent) param.args[0];
                 L.d(TAG, view.getClass().getSimpleName());
                 L.d(TAG, "viewTouchEvent: " + event.getAction());
-                mTouchHandler.hookTouchEvent(view, event, mFilters);
+                mTouchHandler.hookTouchEvent(view, event, mFilters, true);
             }
         }
     }
