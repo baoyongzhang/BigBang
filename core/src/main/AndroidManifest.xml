@@ -27,6 +27,8 @@
                 <data android:scheme="bigBang"/>
             </intent-filter>
         </activity>
+        <activity android:name=".xposed.setting.XposedAppManagerActivity"></activity>
+
 
         <service
             android:name=".service.BigBangService"

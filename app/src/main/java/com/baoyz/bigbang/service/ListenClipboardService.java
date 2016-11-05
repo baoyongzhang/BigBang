@@ -38,7 +38,7 @@ public final class ListenClipboardService extends Service {
 
     private void showAction() {
         ClipData primaryClip = mClipboardManager.getPrimaryClip();
-        if (primaryClip != null && primaryClip.getItemCount() > 0) {
+        if (primaryClip != null && primaryClip.getItemCount() > 0 && !"BigBang".equals(primaryClip.getDescription().getLabel())) {
             CharSequence text = primaryClip.getItemAt(0).coerceToText(this);
             if (text != null) {
                 mFloatingView.setText(text.toString());

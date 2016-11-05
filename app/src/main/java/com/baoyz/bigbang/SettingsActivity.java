@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.baoyz.bigbang.core.BigBang;
 import com.baoyz.bigbang.core.action.CopyAction;
+import com.baoyz.bigbang.core.xposed.XposedEnable;
+import com.baoyz.bigbang.core.xposed.setting.XposedAppManagerActivity;
 import com.baoyz.bigbang.service.ListenClipboardService;
 import com.baoyz.treasure.Treasure;
 
@@ -107,7 +109,16 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(SettingsActivity.this, StyleActivity.class));
             }
         });
+        findViewById(R.id.xposed_app_manger).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, XposedAppManagerActivity.class));
+            }
+        });
 
+        if (XposedEnable.isEnable()) {
+            findViewById(R.id.xposed_app_manger).setVisibility(View.VISIBLE);
+        }
         mConfig = Treasure.get(this, Config.class);
         updateUI();
 

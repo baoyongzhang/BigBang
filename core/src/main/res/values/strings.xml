@@ -1,3 +1,5 @@
 <resources>
     <string name="accessibility_des">打开右上角开关，在弹出的对话框中点击 `确认`。\n\n开启后，在微信聊天页面中点击文字聊天气泡就会打开 BigBang 页面。</string>
+    <string name="search">搜索</string>
+    <string name="no_result">没有数据</string>
 </resources>

@@ -25,15 +25,6 @@ import java.util.List;
 
 public class TouchHandler {
 
-
-    public static int BIG_BANG_RESPONSE_TIME = 800;
-    public static int INVALID_INTERVAL = 60;
-
-    private static final String TAG = "TouchHandler";
-    private static final Comparator<View> TOP_SORTED_CHILDREN_COMPARATOR;
-
-
-
     static {
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -43,20 +34,26 @@ public class TouchHandler {
         }
     }
 
+    public static int BIG_BANG_RESPONSE_TIME = 400;
+    public static int INVALID_INTERVAL = 60;
+
+    private static final String TAG = "TouchHandler";
+    private static final Comparator<View> TOP_SORTED_CHILDREN_COMPARATOR;
+
     private final List<View> topmostChildList = new ArrayList<>();
 
 
-    public boolean hookTouchEvent(View v, MotionEvent event, List<Filter> filters) {
+    public boolean hookTouchEvent(View v, MotionEvent event, List<Filter> filters, boolean needVerify) {
         boolean handle = false;
         if (event.getAction() == MotionEvent.ACTION_UP) {
             View targetTextView = getTargetTextView(v, event, filters);
             if (targetTextView != null) {
-                L.logClass(TAG,targetTextView.getClass());
+                L.logClass(TAG, targetTextView.getClass());
                 long preClickTimeMillis = getClickTimeMillis(targetTextView);
                 long currentTimeMillis = System.currentTimeMillis();
                 if (preClickTimeMillis != 0) {
                     long interval = currentTimeMillis - preClickTimeMillis;
-                    if (interval< INVALID_INTERVAL) {
+                    if (interval < INVALID_INTERVAL) {
                         return false;
                     }
                     if (interval < BIG_BANG_RESPONSE_TIME) {
@@ -67,7 +64,7 @@ public class TouchHandler {
                                 break;
                             }
                         }
-                        if (msg != null) {
+                        if (msg != null && (needVerify || verifyText(msg))) {
                             handle = true;
                             Context context = targetTextView.getContext();
                             Intent intent = null;
@@ -81,22 +78,52 @@ public class TouchHandler {
                         }
                     }
                 }
-                setClickTimeMillis(targetTextView,currentTimeMillis);
+                setClickTimeMillis(targetTextView, currentTimeMillis);
 
             }
         }
         return handle;
     }
 
-    public long getClickTimeMillis(View view){
+    private boolean verifyText(String msg) {
+        if (msg.length() > 20) {
+            return true;
+        }
+        //中文大于5个
+        if (hasChinaLength(msg) > 5) {
+            return true;
+            //英文大于4个单词
+        } else if (hasEnglishLength(msg) > 4) {
+            return true;
+        }
+        return false;
+    }
+
+    private int hasChinaLength(String text) {
+        int length = 0;
+        for (char c : text.toCharArray()) {
+            //[\u4e00-\u9fbb]
+            if (19968 <= c && c <= 40891) {
+                length++;
+            }
+        }
+        return length;
+    }
+
+    private int hasEnglishLength(String text) {
+        int length = text.split("\\w+").length;
+        return length;
+    }
+
+    public long getClickTimeMillis(View view) {
         Object preClickTimeMillis = view.getTag(R.id.bigBang_$$);
-        if(preClickTimeMillis != null){
-            return (Long)preClickTimeMillis;
+        if (preClickTimeMillis != null) {
+            return (Long) preClickTimeMillis;
         }
         return 0;
     }
 
-    public void setClickTimeMillis(View view,long timeMillis){
+    public void setClickTimeMillis(View view, long timeMillis) {
         view.setTag(R.id.bigBang_$$, timeMillis);
     }
 
@@ -123,6 +150,7 @@ public class TouchHandler {
         }
         return null;
     }
+
     private boolean isValid(List<Filter> filters, View view) {
 
         for (Filter filter : filters) {
