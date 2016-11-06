@@ -102,11 +102,11 @@ public class FloatingView extends ImageView {
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     mWindowManager.removeView(FloatingView.this);
+                    isShow = false;
                 }
             }).start();
         }
         removeCallbacks(mDismissTask);
-        isShow = false;
     }
 
     public void setText(String text) {
