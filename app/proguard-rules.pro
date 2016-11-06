@@ -17,5 +17,5 @@
 #}
 
 -keep class com.baoyz.bigbang.core.xposed.* { *; }
-
+-keep class android.support.** { *; }
 -dontwarn **
