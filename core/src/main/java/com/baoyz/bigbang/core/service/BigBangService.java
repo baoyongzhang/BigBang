@@ -5,6 +5,7 @@
 package com.baoyz.bigbang.core.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Created by baoyongzhang on 2016/10/24.
@@ -29,6 +31,10 @@ public class BigBangService extends AccessibilityService {
         int eventType = event.getEventType();
         CharSequence className = event.getClassName();
         switch (eventType) {
+            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED: {
+                participleWechatOnelineChat(event);
+                break;
+            }
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED: {
                 mWindowClassName = event.getClassName();
                 break;
@@ -96,4 +102,25 @@ public class BigBangService extends AccessibilityService {
     public static String getServiceKey(Context context) {
         return context.getPackageName() + "/" + BigBangService.class.getCanonicalName();
     }
+
+    public void participleWechatOnelineChat(AccessibilityEvent event){
+        List<CharSequence> txtLists = event.getText();
+        if (!txtLists.isEmpty()) {
+            StringBuffer sb = new StringBuffer();
+            for (CharSequence txt : txtLists) {
+                if(!TextUtils.isEmpty(txt)){
+                    sb.append(txt);
+                    Intent intent = null;
+                    try {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode("您的好友"+sb.toString(), "utf-8")));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
+
 }
