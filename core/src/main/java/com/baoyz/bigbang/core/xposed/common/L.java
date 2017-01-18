@@ -1,4 +1,4 @@
-package com.baoyz.bigbang.core.xposed;
+package com.baoyz.bigbang.core.xposed.common;
 
 import android.util.Log;
 

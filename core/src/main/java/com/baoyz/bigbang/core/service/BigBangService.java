@@ -37,14 +37,15 @@ public class BigBangService extends AccessibilityService {
                 if (isWechatUI() && "android.widget.TextView".equals(className)) {
                     AccessibilityNodeInfo source = event.getSource();
                     CharSequence text = source.getText();
-                    Intent intent = null;
-                    try {
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode(text.toString(), "utf-8")));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                    if (text != null) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("bigBang://?extra_text=" + URLEncoder.encode(text.toString(), "utf-8")));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
                 }
                 break;
             }

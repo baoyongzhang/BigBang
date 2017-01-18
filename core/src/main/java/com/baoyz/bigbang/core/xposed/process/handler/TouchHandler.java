@@ -1,4 +1,4 @@
-package com.baoyz.bigbang.core.xposed;
+package com.baoyz.bigbang.core.xposed.process.handler;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.baoyz.bigbang.core.R;
+import com.baoyz.bigbang.core.xposed.common.L;
+import com.baoyz.bigbang.core.xposed.process.TextViewFilter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,7 +28,6 @@ import java.util.List;
 public class TouchHandler {
 
     static {
-
         if (Build.VERSION.SDK_INT >= 21) {
             TOP_SORTED_CHILDREN_COMPARATOR = new ViewElevationComparator();
         } else {
@@ -40,13 +41,12 @@ public class TouchHandler {
     private static final String TAG = "TouchHandler";
     private static final Comparator<View> TOP_SORTED_CHILDREN_COMPARATOR;
 
-    private final List<View> topmostChildList = new ArrayList<>();
+    private List<View> tempViewList = new ArrayList<>();
 
-
-    public boolean hookTouchEvent(View v, MotionEvent event, List<Filter> filters, boolean needVerify) {
+    public boolean hookTouchEvent(View v, MotionEvent event, List<TextViewFilter> textViewFilters, boolean needVerify) {
         boolean handle = false;
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            View targetTextView = getTargetTextView(v, event, filters);
+            View targetTextView = getTargetTextView(v, event, textViewFilters);
             if (targetTextView != null) {
                 L.logClass(TAG, targetTextView.getClass());
                 long preClickTimeMillis = getClickTimeMillis(targetTextView);
@@ -58,8 +58,8 @@ public class TouchHandler {
                     }
                     if (interval < BIG_BANG_RESPONSE_TIME) {
                         String msg = null;
-                        for (Filter filter : filters) {
-                            msg = filter.getContent(targetTextView);
+                        for (TextViewFilter textViewFilter : textViewFilters) {
+                            msg = textViewFilter.getContent(targetTextView);
                             if (msg != null) {
                                 break;
                             }
@@ -127,34 +127,40 @@ public class TouchHandler {
         view.setTag(R.id.bigBang_$$, timeMillis);
     }
 
-    private View getTargetTextView(View view, MotionEvent event, List<Filter> filters) {
+    private View getTargetTextView(View view, MotionEvent event, List<TextViewFilter> textViewFilters) {
         if (isOnTouchRect(view, event)) {
+
             if (view instanceof ViewGroup) {
-                getTopSortedChildren((ViewGroup) view, topmostChildList);
-                final int childCount = topmostChildList.size();
-                for (int i = 0; i < childCount; i++) {
-                    View child = topmostChildList.get(i);
-                    if (isOnTouchRect(child, event)) {
-                        if (child instanceof ViewGroup) {
-                            return getTargetTextView(child, event, filters);
-                        } else if (isValid(filters, child))
-                            return child;
+                try {
+                    getTopSortedChildren((ViewGroup) view, tempViewList);
+                    final int childCount = tempViewList.size();
+                    for (int i = 0; i < childCount; i++) {
+                        View child = tempViewList.get(i);
+                        if (isOnTouchRect(child, event)) {
+                            if (child instanceof ViewGroup) {
+                                return getTargetTextView(child, event, textViewFilters);
+                            } else if (isValid(textViewFilters, child))
+                                return child;
+                        }
                     }
+                } finally {
+                    tempViewList.clear();
                 }
             } else {
-                if (isOnTouchRect(view, event) && isValid(filters, view)) {
+                if (isOnTouchRect(view, event) && isValid(textViewFilters, view)) {
                     return view;
                 }
             }
+
 
         }
         return null;
     }
 
-    private boolean isValid(List<Filter> filters, View view) {
+    private boolean isValid(List<TextViewFilter> textViewFilters, View view) {
 
-        for (Filter filter : filters) {
-            if (filter.filter(view)) {
+        for (TextViewFilter textViewFilter : textViewFilters) {
+            if (textViewFilter.filter(view)) {
                 return true;
             }
         }
