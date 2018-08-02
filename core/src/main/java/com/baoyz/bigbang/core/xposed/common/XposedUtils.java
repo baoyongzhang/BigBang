@@ -20,7 +20,6 @@ public class XposedUtils {
             findAndHookMethod("com.baoyz.bigbang.core.xposed.XposedEnable", loadPackageParam.classLoader, "isEnable", XC_MethodReplacemet.returnConstant(true));
         }
     }
-
     
     // Have a look at the "findClassIfExists" method in the XposedHelpers class. As far as I know, it does the exact same thing as this
     public static Class forClassName(ClassLoader classLoader, String className) { 
